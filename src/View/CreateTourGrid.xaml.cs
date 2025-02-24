@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace TourPlanner.ViewModel
+namespace TourPlanner.View
 {
     public partial class CreateTourGrid : UserControl
     {

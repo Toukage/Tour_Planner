@@ -37,4 +37,8 @@
     <ProjectReference Include="..\TourPlanner.Model\TourPlanner.Model.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ViewModel\" />
+  </ItemGroup>
+
 </Project>
