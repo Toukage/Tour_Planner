@@ -20,7 +20,8 @@ namespace TourPlanner.View
 
         private void CreateBtn_Click(object sender, RoutedEventArgs e)
         {  
-            
+            CreateTour createTourWindow = new CreateTour();
+            createTourWindow.ShowDialog();
         }
 
         private void DeleteBtn_Click(object sender, RoutedEventArgs e)
