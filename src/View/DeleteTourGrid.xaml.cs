@@ -1,24 +1,22 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 using TourPlanner.ViewModel;
 
 
 namespace TourPlanner.View
 {
-    public partial class CreateTourGrid : UserControl
+    public partial class DeleteTourGrid : UserControl
     {
-        public CreateTourGrid()
+        public DeleteTourGrid()
         {
             InitializeComponent();
             this.DataContext = new TourViewModel();
         }
-
-        private void SaveTourBtn_Click(object sender, RoutedEventArgs e)
+        private void DropTourBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (Window.GetWindow(this) is CreateTour createTourWindow)
+            if (Window.GetWindow(this) is DeleteTour deleteTourWindow)
             {
-                createTourWindow.Close();
+                deleteTourWindow.Close();
             }
         }
     }
