@@ -19,6 +19,7 @@ namespace TourPlanner.View
         public CreateTour()
         {
             InitializeComponent();
+            this.DataContext = new TourViewModel();
         }
     }
 }
