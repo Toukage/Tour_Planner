@@ -38,10 +38,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ViewModel\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Compile Update="View\DeleteTourGrid.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
