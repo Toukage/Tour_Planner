@@ -14,35 +14,43 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
+        <!-- Tour Name -->
+        <TextBlock Grid.Row="0" Grid.Column="1" Text="Tour Name:" Margin="0,0,0,5"/>
+        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Tour.TourName, UpdateSourceTrigger=PropertyChanged}" />
 
-        <!-- Labels and Inputs -->
-        <TextBlock Grid.Row="0" Grid.Column="0" Text="Tour Name:" VerticalAlignment="Center" Margin="5"/>
-        <TextBox Grid.Row="0" Grid.Column="1" Width="200" Margin="5"/>
+        <!-- Start Location -->
+        <TextBlock Grid.Row="2" Grid.Column="1" Text="Start Location:" Margin="0,10,0,5"/>
+        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Tour.TourStart, UpdateSourceTrigger=PropertyChanged}" />
+        <!-- End Location -->
+        <TextBlock Grid.Row="4" Grid.Column="1" Text="End Location:" Margin="0,10,0,5"/>
+        <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding Tour.TourEnd, UpdateSourceTrigger=PropertyChanged}" />
 
-        <TextBlock Grid.Row="1" Grid.Column="0" Text="Start Location:" VerticalAlignment="Center" Margin="5"/>
-        <TextBox Grid.Row="1" Grid.Column="1" Width="200" Margin="5"/>
+        <!-- Description -->
+        <TextBlock Grid.Row="6" Grid.Column="1" Text="Description:" Margin="0,10,0,5"/>
+        <TextBox Grid.Row="7" Grid.Column="1" Text="{Binding Tour.Description, UpdateSourceTrigger=PropertyChanged}" />
 
-        <TextBlock Grid.Row="2" Grid.Column="0" Text="End Location:" VerticalAlignment="Center" Margin="5"/>
-        <TextBox Grid.Row="2" Grid.Column="1" Width="200" Margin="5"/>
-
-        <TextBlock Grid.Row="3" Grid.Column="0" Text="Description:" VerticalAlignment="Center" Margin="5"/>
-        <TextBox Grid.Row="3" Grid.Column="1" Width="200" Margin="5"/>
-
-        <TextBlock Grid.Row="4" Grid.Column="0" Text="Transportation Type:" VerticalAlignment="Center" Margin="5"/>
-        <ComboBox Grid.Row="4" Grid.Column="1" Width="200" Margin="5">
-            <ComboBoxItem Content="Car"/>
-            <ComboBoxItem Content="Bike"/>
-            <ComboBoxItem Content="Walking"/>
-            <ComboBoxItem Content="Public Transport"/>
+        <!-- Transport -->
+        <TextBlock Grid.Row="8" Grid.Column="1" Text="Transport:" Margin="0,10,0,5"/>
+        <ComboBox Grid.Row="9" Grid.Column="1" SelectedItem="{Binding Tour.Transport, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+            <ComboBoxItem>Car</ComboBoxItem>
+            <ComboBoxItem>Bike</ComboBoxItem>
+            <ComboBoxItem>Walking</ComboBoxItem>
+            <ComboBoxItem>Public Transport</ComboBoxItem>
         </ComboBox>
 
-        <Button Grid.Row="5" Grid.ColumnSpan="2" Content="Create Tour"
-                Width="120" Margin="10" HorizontalAlignment="Center" Click="SaveTourBtn_Click"/>
+        <!-- Create Button -->
+        <Button Grid.Row="10" Grid.Column="1" Content="Create Tour" Width="100" Margin="10" 
+                Click="SaveTourBtn_Click" Command="{Binding CreateTourCommand}"/>
     </Grid>
 </UserControl>
