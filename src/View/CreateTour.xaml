@@ -11,6 +11,6 @@
            ResizeMode="NoResize">
 
     <Grid Margin="10">
-        <local:CreateTourGrid />
+        <local:CreateTourGrid DataContext="{Binding}" />
     </Grid>
 </Window>
