@@ -41,4 +41,13 @@
     <Folder Include="ViewModel\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="View\DeleteTourGrid.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\DeleteTour.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+
 </Project>
