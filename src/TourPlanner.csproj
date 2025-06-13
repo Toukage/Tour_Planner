@@ -16,10 +16,21 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="log4net.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Generator>MSBuild:Compile</Generator>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="FluentValidation" Version="11.11.0" />
-    <PackageReference Include="log4net" Version="3.0.3" />
+    <PackageReference Include="log4net" Version="3.0.4" />
     <PackageReference Include="MaterialDesignThemes" Version="5.2.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.1">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.2">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -35,6 +46,15 @@
     <ProjectReference Include="..\BusinessLayer\BusinessLayer.csproj" />
     <ProjectReference Include="..\DataAccessLayer\DataAccessLayer.csproj" />
     <ProjectReference Include="..\TourPlanner.Model\TourPlanner.Model.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="View\DeleteTour.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\DeleteTourGrid.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
 
 </Project>
