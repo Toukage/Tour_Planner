@@ -1,8 +1,9 @@
 ﻿using BusinessLayer;
-using log4net.Config;
 using System.ComponentModel;
 using System.Windows.Input;
 using TourPlanner.Model;
+using log4net;
+using log4net.Config;
 
 namespace TourPlanner.ViewModel
 {
@@ -10,6 +11,7 @@ namespace TourPlanner.ViewModel
     {
         private readonly TourLogic _tourLogic;
         private Tour _tour;
+        private static readonly ILog log = LogManager.GetLogger(typeof(TourViewModel));
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -34,11 +36,15 @@ namespace TourPlanner.ViewModel
 
         private void CreateTour()
         {
+            log.Debug("CreateTourCommand executed.");
+            log.Info($"Creating Tour: {Tour.TourName}  /  {Tour.Description} / {Tour.TourStart} / {Tour.TourEnd} / {Tour.Transport}");
             _tourLogic.CreateNewTour(Tour);
         }
 
         private void DeleteTour()
         {
+            log.Debug("DeleteTourCommand executed.");
+            log.Info($"Deleting Tour: {Tour.TourName}");
             _tourLogic.DeleteTour(Tour);
         }
 

@@ -11,6 +11,7 @@
         <TextBlock x:Name="Tours" HorizontalAlignment="Left" Margin="0,62,0,0" TextWrapping="Wrap" Text="Tours" VerticalAlignment="Top"/>
         <Button x:Name="CreateBtn" Content="  +  " HorizontalAlignment="Left" Margin="55,62,0,0" VerticalAlignment="Top" Click="CreateBtn_Click"/>
         <Button x:Name="DeleteBtn" Content="  -  " HorizontalAlignment="Left" Margin="85,62,0,0" VerticalAlignment="Top" Click="DeleteBtn_Click"/>
+        <Button x:Name="UpdateBtn" Content="  ...  " HorizontalAlignment="Left" Margin="115,62,0,0" VerticalAlignment="Top" Click="UpdateBtn_Click" />
         <Image HorizontalAlignment="Left" Height="131" Margin="267,62,0,0" VerticalAlignment="Top" Width="532"/>
     </Grid>
 </Window>

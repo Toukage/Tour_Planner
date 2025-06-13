@@ -1,24 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+﻿using System.Windows;
+using TourPlanner.ViewModel;
+using log4net;
 
 namespace TourPlanner.View
 {
     public partial class CreateTour : Window
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(MainWindow));
         public CreateTour()
         {
             InitializeComponent();
+            log.Info("in CreateTour.cs CreateTour");
             this.DataContext = new TourViewModel();
         }
     }
