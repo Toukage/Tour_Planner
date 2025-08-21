@@ -15,8 +15,20 @@ namespace TourPlanner.View
         [STAThread]
         public static void Main()
         {
-            var logConfigFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "log4net.config");
-            XmlConfigurator.Configure(LogManager.GetRepository(Assembly.GetEntryAssembly()), new FileInfo(logConfigFile));
+            // 1) BaseDir = Ordner der laufenden EXE (bin\Debug\...\)
+            var baseDir = AppDomain.CurrentDomain.BaseDirectory;
+
+            // 2) logs-Unterordner erzeugen
+            var logsDir = Path.Combine(baseDir, "logs");
+            Directory.CreateDirectory(logsDir);
+
+            // 3) log4net-Property setzen, die in der XML verwendet wird
+            log4net.GlobalContext.Properties["LogDir"] = logsDir;
+
+            // 4) log4net.config laden
+            var logConfigFile = Path.Combine(baseDir, "log4net.config");
+            XmlConfigurator.Configure(LogManager.GetRepository(Assembly.GetEntryAssembly()),
+                                      new FileInfo(logConfigFile));
 
             log.Info("----------------> NEW LOG START <----------------");
 
