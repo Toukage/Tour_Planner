@@ -43,11 +43,14 @@
 
         <!-- Transport -->
         <TextBlock Grid.Row="8" Grid.Column="1" Text="Transport:" Margin="0,10,0,5"/>
-        <ComboBox Grid.Row="9" Grid.Column="1" SelectedItem="{Binding Tour.Transport, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
-            <ComboBoxItem>Car</ComboBoxItem>
-            <ComboBoxItem>Bike</ComboBoxItem>
-            <ComboBoxItem>Walking</ComboBoxItem>
-            <ComboBoxItem>Public Transport</ComboBoxItem>
+
+        <ComboBox Grid.Row="9" Grid.Column="1"
+          SelectedValue="{Binding Tour.Transport, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+          SelectedValuePath="Content">
+            <ComboBoxItem Content="Car"/>
+            <ComboBoxItem Content="Bike"/>
+            <ComboBoxItem Content="Walking"/>
+            <ComboBoxItem Content="Public Transport"/>
         </ComboBox>
 
         <!-- Create Button -->
