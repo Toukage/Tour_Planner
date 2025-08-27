@@ -20,6 +20,10 @@ namespace BusinessLayer
         {
             _tour.DropTour(tour);
         }
+        public void ModifyTour(Tour tour)
+        {
+            _tour.EditTour(tour);
+        }
 
         public void getTourData()
         {

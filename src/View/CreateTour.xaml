@@ -4,13 +4,75 @@
            xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
            xmlns:local="clr-namespace:TourPlanner.View"
-           mc:Ignorable="d"
            Title="Create New Tour"
-           Height="400" Width="500"
-           WindowStartupLocation="CenterScreen"
-           ResizeMode="NoResize">
+           Height="560" Width="500"
+           MinHeight="320" MinWidth="500">
 
-    <Grid Margin="10">
-        <local:CreateTourGrid DataContext="{Binding}" />
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Tour Name -->
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="Tour Name:" Margin="5"/>
+        <TextBox Grid.Row="1" Grid.Column="0" Margin="2" >
+            <TextBox.Text>
+                <Binding Path="Tour.TourName" UpdateSourceTrigger="PropertyChanged"/>
+            </TextBox.Text>
+        </TextBox>
+
+        <!-- Start Location -->
+        <TextBlock Grid.Row="2" Grid.Column="1" Text="Start Location:" Margin="5"/>
+        <TextBox Grid.Row="3" Grid.Column="1" Margin="2">
+            <TextBox.Text>
+                <Binding Path="Tour.TourStart" UpdateSourceTrigger="PropertyChanged"/>
+            </TextBox.Text>
+        </TextBox>
+
+        <!-- End Location -->
+        <TextBlock Grid.Row="4" Grid.Column="1" Text="End Location:" Margin="5"/>
+        <TextBox Grid.Row="5" Grid.Column="1" Margin="2">
+            <TextBox.Text>
+                <Binding Path="Tour.TourEnd" UpdateSourceTrigger="PropertyChanged"/>
+            </TextBox.Text>
+        </TextBox>
+
+        <!-- Description -->
+        <TextBlock Grid.Row="6" Grid.Column="1" Text="Description:" Margin="5"/>
+        <TextBox Grid.Row="7" Grid.Column="1" Margin="2">
+            <TextBox.Text>
+                <Binding Path="Tour.Description" UpdateSourceTrigger="PropertyChanged"/>
+            </TextBox.Text>
+        </TextBox>
+
+        <!-- Transport -->
+        <TextBlock Grid.Row="8" Grid.Column="1" Text="Transport:" Margin="5"/>
+
+        <ComboBox Grid.Row="9" Grid.Column="1" SelectedValuePath="Content" Margin="2">
+            <ComboBox.SelectedValue>
+                <Binding Path="Tour.Transport" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged"/>
+            </ComboBox.SelectedValue>
+            <ComboBoxItem Content="Car"/>
+            <ComboBoxItem Content="Bike"/>
+            <ComboBoxItem Content="Walking"/>
+            <ComboBoxItem Content="Public Transport"/>
+        </ComboBox>
+
+        <!-- Create Button -->
+        <Button Grid.Row="10" Grid.Column="1" Content="Create Tour" Width="100" Margin="10" Command="{Binding CreateTourCommand}"/>
     </Grid>
 </Window>

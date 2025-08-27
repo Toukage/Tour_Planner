@@ -4,14 +4,14 @@ using log4net;
 
 namespace TourPlanner.View
 {
-    public partial class CreateTour : Window
+    public partial class ModifyTour : Window
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(MainWindow));
-        public CreateTour()
+        public ModifyTour()
         {
             InitializeComponent();
-            log.Info("in CreateTour.cs CreateTour");
-            var viewModel = new CreateTourViewModel();
+            log.Info("in ModifyTour.cs ModifyTour");
+            var viewModel = new ModifyTourViewModel();
             viewModel.RequestClose += () => this.Close();
             this.DataContext = viewModel;
         }

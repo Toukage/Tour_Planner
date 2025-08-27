@@ -6,18 +6,22 @@ namespace Tests
 {
     public class TourTests
     {
-        private TourViewModel _viewModel;
+        private CreateTourViewModel _createViewModel;
+        private DeleteTourViewModel _deleteViewModel;
+        private ModifyTourViewModel _modifyViewModel;
 
         [SetUp]
         public void Setup()
         {
-            _viewModel = new TourViewModel();
+            _createViewModel = new CreateTourViewModel();
+            _deleteViewModel = new DeleteTourViewModel();
+            _modifyViewModel = new ModifyTourViewModel();
         }
 
         [Test]
         public void CreateTourCommand_ShouldNotBeNull()
         {
-            var viewModel = new TourViewModel();
+            var viewModel = new CreateTourViewModel();
             Assert.That(viewModel.CreateTourCommand, Is.Not.Null);
         }
 
@@ -25,7 +29,7 @@ namespace Tests
         [Test]
         public void CreateTourCommand_ShouldExecuteWithoutException()
         {
-            _viewModel.Tour = new Tour
+            _createViewModel.Tour = new Tour
             {
                 TourName = "Test Tour",
                 Description = "Just a test",
@@ -34,20 +38,20 @@ namespace Tests
                 Transport = "Car"
             };
 
-            Assert.DoesNotThrow(() => _viewModel.CreateTourCommand.Execute(null));
+            Assert.DoesNotThrow(() => _createViewModel.CreateTourCommand.Execute(null));
         }
 
         [Test]
         public void CreateTourCommand_CanExecute_ReturnsTrue()
         {
-            var viewModel = new TourViewModel();
-            Assert.That(viewModel.CreateTourCommand.CanExecute(null), Is.True);
+            var createViewModel = new CreateTourViewModel();
+            Assert.That(createViewModel.CreateTourCommand.CanExecute(null), Is.True);
         }
 
         [Test]
         public void DeleteTourCommand_ShouldExecuteWithoutException()
         {
-            _viewModel.Tour = new Tour
+            _deleteViewModel.Tour = new Tour
             {
                 TourName = "Test Tour To Delete",
                 Description = "To delete",
@@ -56,7 +60,7 @@ namespace Tests
                 Transport = "Bike"
             };
 
-            Assert.DoesNotThrow(() => _viewModel.DeleteTourCommand.Execute(null));
+            Assert.DoesNotThrow(() => _deleteViewModel.DeleteTourCommand.Execute(null));
         }
     }
 

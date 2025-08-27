@@ -27,9 +27,11 @@ namespace TourPlanner.View
             deleteTourWindow.ShowDialog();
         }
 
-        private void UpdateBtn_Click(object sender, RoutedEventArgs e)
+        private void ModifyBtn_Click(object sender, RoutedEventArgs e)
         {
-            log.Info("Editing Tour");
+            log.Info("Modifying Tour");
+            ModifyTour modifyTourWindow = new ModifyTour();
+            modifyTourWindow.ShowDialog();
         }
     }
 }

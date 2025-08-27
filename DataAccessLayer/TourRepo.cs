@@ -29,6 +29,27 @@ namespace DataAccessLayer
             }
         }
 
+        public void EditTour(Tour tour)
+        {
+            try
+            {
+                log.Info($"Attempting to modify tour: {tour.TourName}, {tour.TourStart}, {tour.TourEnd}");
+
+                using (var db = new DatabaseManager())
+                {
+                    db.Tours.Add(tour);
+                    db.SaveChanges();
+                }
+
+                log.Info($"Successfully modified tour: {tour.TourName}");
+            }
+            catch (Exception ex)
+            {
+                log.Error("Error modifing tour", ex);
+                throw;
+            }
+        }
+
         //--------------------------------REMOVE--DATA--------------------------------
         public void DropTour(Tour tour)
         {

@@ -11,7 +11,9 @@ namespace TourPlanner.View
         {
             InitializeComponent();
             log.Info("in DeleteTour.cs DeleteTour");
-            this.DataContext = new TourViewModel();
+            var viewModel = new DeleteTourViewModel();
+            viewModel.RequestClose += () => this.Close();
+            this.DataContext = viewModel;
         }
     }
 }

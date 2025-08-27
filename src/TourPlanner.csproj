@@ -38,10 +38,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="View\DeleteTourGrid.xaml.cs">
+    <Compile Update="View\DeleteTour.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="View\DeleteTour.xaml.cs">
+    <Compile Update="View\ModifyTour.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
