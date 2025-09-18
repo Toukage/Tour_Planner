@@ -1,9 +1,11 @@
 ﻿<Application x:Class="TourPlanner.View.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:TourPlanner.View"
-             StartupUri="MainWindow.xaml">
+             xmlns:conv="clr-namespace:TourPlanner.Converters">
     <Application.Resources>
-         
+        <ResourceDictionary>
+            <conv:NullToBoolConverter x:Key="NullToBool"/>
+        </ResourceDictionary>
     </Application.Resources>
+
 </Application>

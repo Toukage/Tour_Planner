@@ -16,13 +16,37 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="appsettings.json" />
+    <None Remove="Resources\Map\Directions.js" />
+    <None Remove="Resources\Map\Leaflet.html" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Map\directions.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Map\leaflet.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BouncyCastle.Cryptography" Version="2.6.2" />
     <PackageReference Include="FluentValidation" Version="12.0.0" />
-    <PackageReference Include="log4net" Version="3.1.0" />
+    <PackageReference Include="itext7" Version="9.3.0" />
+    <PackageReference Include="itext7.bouncy-castle-adapter" Version="9.3.0" />
+    <PackageReference Include="log4net" Version="3.2.0" />
     <PackageReference Include="MaterialDesignThemes" Version="5.2.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.8">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="9.0.8" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.8" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3405.78" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Npgsql" Version="9.0.3" />
@@ -38,9 +62,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="View\DeleteTour.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Update="View\ModifyTour.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
