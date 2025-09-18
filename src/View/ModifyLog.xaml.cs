@@ -2,9 +2,9 @@
 
 namespace TourPlanner.View
 {
-    public partial class ModifyTour : Window
+    public partial class ModifyLog : Window
     {
-        public ModifyTour()
+        public ModifyLog()
         {
             InitializeComponent();
         }
