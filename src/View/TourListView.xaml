@@ -1,0 +1,65 @@
+﻿<UserControl x:Class="TourPlanner.View.TourListView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:s="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+             xmlns:conv="clr-namespace:TourPlanner.Converters"
+             xmlns:local="clr-namespace:TourPlanner.View"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="300">
+    
+    <UserControl.Resources>
+        
+        <conv:NullToBoolConverter x:Key="NullToBool"/>
+        
+        <CollectionViewSource x:Key="SortedTours" Source="{Binding Tours}">
+            <CollectionViewSource.SortDescriptions>
+                <s:SortDescription PropertyName="TourID" Direction="Descending"/>
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
+        
+    </UserControl.Resources>
+
+    <Grid Margin="10">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <DockPanel Grid.Row="0" LastChildFill="False">
+            <TextBlock Text="Tours" FontWeight="Bold" DockPanel.Dock="Left" VerticalAlignment="Center" Margin="0,0,8,0"/>
+
+            <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+                <local:CreateBtn Command="{Binding OpenCreateTourCommand}" Margin="0,0,0,0"/>
+                <local:DeleteBtn Margin="0,0,0,0" IsButtonEnabled="{Binding SelectedItem, Converter={StaticResource NullToBool}}" Command="{Binding DeleteTourCommand}"/>
+                <local:ModifyBtn Margin="0,0,0,0" IsButtonEnabled="{Binding SelectedItem, Converter={StaticResource NullToBool}}" Command="{Binding ModifyTourCommand}"/>
+                <Button Content="📄" Padding="8,2" IsEnabled="{Binding SelectedItem, Converter={StaticResource NullToBool}}" Command="{Binding ReportTourCommand}"/>
+            </StackPanel>
+        </DockPanel>
+
+        <ListView Grid.Row="1" ItemsSource="{Binding Source={StaticResource SortedTours}}" SelectedItem="{Binding SelectedItem, Mode=TwoWay}" ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Stretch">
+
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    <Setter Property="Padding" Value="8"/>
+                    <Style.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Background" Value="#FFEAEAEA"/>
+                            <Setter Property="FontWeight" Value="SemiBold"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </ListView.ItemContainerStyle>
+
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding TourName}"/>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+    </Grid>
+</UserControl>
