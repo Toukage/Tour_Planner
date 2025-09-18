@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DataAccessLayer;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using TourPlanner.Model;
 
 namespace DataAccessLayer
@@ -6,17 +8,7 @@ namespace DataAccessLayer
     public class DatabaseManager : DbContext
     {
         public DbSet<Tour> Tours { get; set; }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder.UseNpgsql("Host=localhost;Port=5433;Username=toukage;Password=tourplanner;Database=TP_DB");
-            }
-        }
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Tour>().ToTable("tour");
-        }
+        public DbSet<TourLog> TourLogs { get; set; }
+        public DatabaseManager(DbContextOptions<DatabaseManager> options) : base(options) { }
     }
 }
