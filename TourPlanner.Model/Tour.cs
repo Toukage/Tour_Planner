@@ -14,6 +14,7 @@ namespace TourPlanner.Model
     {
         [Key]
         [Column("tourid")]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int TourID { get; set; }
 
         [Required, StringLength(225)]
@@ -22,7 +23,7 @@ namespace TourPlanner.Model
 
         [Required]
         [Column("description")]
-        public string Description { get; set; }
+        public string TourDescription { get; set; }
 
         [Required, StringLength(50)]
         [Column("tourstart")]
