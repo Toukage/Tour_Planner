@@ -1,0 +1,38 @@
+﻿<Window x:Class="TourPlanner.View.CreateTourLog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Create Tour Log" Height="420" Width="420"
+        WindowStartupLocation="CenterOwner" ResizeMode="NoResize">
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Margin="4">
+            <TextBlock Text="Date ; Time"/>
+            <DatePicker SelectedDate="{Binding Log.LogDate, Mode=TwoWay}"/>
+            <TextBox Margin="0,4,0,0" Text="{Binding Log.LogDate, Mode=TwoWay, StringFormat={}{0:t}}" ToolTip="Type time (HH:mm) after picking a date"/>
+
+            <TextBlock Margin="8,10,0,0" Text="Comment"/>
+            <TextBox Text="{Binding Log.LogComment}" />
+
+            <TextBlock Margin="8,10,0,0" Text="Difficulty (1-5)"/>
+            <Slider Minimum="1" Maximum="5" TickFrequency="1" IsSnapToTickEnabled="True" Value="{Binding Log.LogDifficulty, Mode=TwoWay}" />
+
+            <TextBlock Margin="8,10,0,0" Text="Total Distance (km)"/>
+            <TextBox Text="{Binding Log.LogDistance}" />
+
+            <TextBlock Margin="8,10,0,0" Text="Total Time (min)"/>
+            <TextBox Text="{Binding Log.LogTime}" />
+
+            <TextBlock Margin="8,10,0,0" Text="Rating (1-5)"/>
+            <Slider Minimum="1" Maximum="5" TickFrequency="1" IsSnapToTickEnabled="True" Value="{Binding Log.Rating, Mode=TwoWay}" />
+        </StackPanel>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
+            <Button Content="Save"   Width="90" Margin="0,0,8,0" Command="{Binding SaveCommand}"/>
+            <Button Content="Cancel" Width="90" Command="{Binding CancelCommand}"/>
+        </StackPanel>
+    </Grid>
+</Window>
