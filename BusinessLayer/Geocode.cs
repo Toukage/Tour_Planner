@@ -1,10 +1,11 @@
-﻿using log4net;
+﻿using BusinessLayer.Interfaces;
+using log4net;
 using System.Globalization;
 using System.Text.Json;
 
 namespace BusinessLayer
 {
-    public sealed class GeoCode
+    public sealed class GeoCode : IGeoCode
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(GeoCode));
         private readonly HttpClient _http;

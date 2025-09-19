@@ -1,18 +1,19 @@
 ﻿using TourPlanner.Model;
-using DataAccessLayer;
 using log4net;
+using BusinessLayer.Interfaces;
+using DataAccessLayer.Interfaces;
 
 namespace BusinessLayer
 {
-    public class TourLogic
+    public class TourLogic : ITourLogic
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(TourLogic)); 
-        readonly TourRepo _tourRepo;
-        private readonly Routing _routing;
-        private readonly Report _report;
-        private readonly LogLogic _logLogic;
+        private static readonly ILog log = LogManager.GetLogger(typeof(TourLogic));
+        private readonly ITourRepo _tourRepo;
+        private readonly IRouting _routing;
+        private readonly IReport _report;
+        private readonly ILogLogic _logLogic;
 
-        public TourLogic(TourRepo tourRepo, Routing routing, Report report, LogLogic logLogic)
+        public TourLogic(ITourRepo tourRepo, IRouting routing, IReport report, ILogLogic logLogic)
         {
             _tourRepo = tourRepo;
             _routing = routing;

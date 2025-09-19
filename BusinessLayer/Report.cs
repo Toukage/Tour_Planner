@@ -6,10 +6,11 @@ using iText.Layout.Properties;
 using iText.IO.Image;
 using iText.Layout.Borders;
 using System.Globalization;
+using BusinessLayer.Interfaces;
 
 namespace BusinessLayer
 {
-    public sealed class Report
+    public sealed class Report : IReport
     {
         public async Task ReportAsync(
         Tour tour,
@@ -86,7 +87,7 @@ namespace BusinessLayer
                     }
                 }, ct);
             }
-            catch
+            catch (Exception ex)
             {
                 throw new ReportException("Failed to generate report.", ex);
             }

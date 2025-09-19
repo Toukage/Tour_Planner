@@ -1,11 +1,12 @@
 ﻿using System.Text;
 using System.Text.Json;
+using BusinessLayer.Interfaces;
 using log4net;
 
 namespace BusinessLayer
 {
 
-    public sealed class Directions
+    public sealed class Directions : IDirections
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(Directions));
         private readonly HttpClient _http;

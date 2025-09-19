@@ -1,4 +1,5 @@
-﻿using DataAccessLayer;
+﻿using BusinessLayer.Interfaces;
+using DataAccessLayer.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,10 +9,10 @@ using TourPlanner.Model;
 
 namespace BusinessLayer
 {
-    public sealed class LogLogic
+    public sealed class LogLogic : ILogLogic
     {
-        private readonly LogRepo _repo;
-        public LogLogic(LogRepo repo) => _repo = repo;
+        private readonly ILogRepo _repo;
+        public LogLogic(ILogRepo repo) => _repo = repo;
 
         public async Task<List<TourLog>> GetLogsAsync(int tourId, CancellationToken ct = default)
         {
@@ -25,7 +26,7 @@ namespace BusinessLayer
             }
         }
 
-        public async Task<TourLog> CreateAsync(
+        public async Task<TourLog> CreateLogAsync(
             int tourId, DateTime date, string? comment, int difficulty, float distance, float time, int rating,
             CancellationToken ct = default)
         {
@@ -48,11 +49,11 @@ namespace BusinessLayer
             }
         }
 
-        public async Task DeleteAsync(TourLog log, CancellationToken ct = default)
+        public async Task DeleteLogAsync(TourLog log, CancellationToken ct = default)
         {
             try
             {
-                await _repo.DeleteLogAsync(log, ct);
+                await _repo.DropLogAsync(log, ct);
             }
             catch (Exception ex)
             {
@@ -60,7 +61,7 @@ namespace BusinessLayer
             }
         }
 
-        public async Task ModifyAsync(TourLog log, CancellationToken ct = default)
+        public async Task ModifyLogAsync(TourLog log, CancellationToken ct = default)
         {
             try
             {

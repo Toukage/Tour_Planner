@@ -1,14 +1,15 @@
 ﻿using System.Collections.Concurrent;
+using BusinessLayer.Interfaces;
 using log4net;
 
 namespace BusinessLayer
 {
-    public sealed class Routing
+    public sealed class Routing : IRouting
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(Routing));
 
-        private readonly GeoCode _geo;
-        private readonly Directions _dir;
+        private readonly IGeoCode _geo;
+        private readonly IDirections _dir;
 
         private readonly ConcurrentDictionary<string, Task<RouteResult>> _cache = new();
         private sealed class RouteResult //zwischen speicher
@@ -17,7 +18,7 @@ namespace BusinessLayer
             public double Km;
             public double Minutes;
         }
-        public Routing(GeoCode geo, Directions dir)
+        public Routing(IGeoCode geo, IDirections dir)
         {
             _geo = geo;
             _dir = dir;
