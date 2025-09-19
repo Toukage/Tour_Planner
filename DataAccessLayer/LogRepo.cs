@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DataAccessLayer
 {
-    public class LogRepo
+    public class LogRepo : ILogRepo
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(LogRepo));
         private readonly IDbContextFactory<DatabaseManager> _dbFactory;
@@ -48,17 +48,22 @@ namespace DataAccessLayer
         }
 
         //--------------------------------REMOVE--DATA--------------------------------
-        public async Task DeleteLogAsync(TourLog logEntity, CancellationToken ct = default)
+        public async Task DropLogAsync(TourLog logEntity, CancellationToken ct = default)
         {
+
+            if (logEntity == null)
+                throw new LogRepoException("Log entity is null.");
             try
             {
                 using var db = _dbFactory.CreateDbContext();
                 var toDelete = await db.TourLogs.FindAsync(new object?[] { logEntity.LogID }, ct);
-                if (toDelete != null)
-                {
-                    db.TourLogs.Remove(toDelete);
-                    await db.SaveChangesAsync(ct);
-                }
+
+                if (toDelete == null)
+                    throw new LogRepoException($"Log with ID {logEntity.LogID} not found.");
+
+                db.TourLogs.Remove(toDelete);
+                await db.SaveChangesAsync(ct);
+                
             }
             catch (Exception ex)
             {

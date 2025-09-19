@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DataAccessLayer
 {
-    public class TourRepo
+    public class TourRepo : ITourRepo
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(TourRepo));
         private readonly IDbContextFactory<DatabaseManager> _dbFactory;
@@ -15,7 +15,7 @@ namespace DataAccessLayer
         }
 
         //--------------------------------SET--DATA--------------------------------
-        public async Task InsertTourAsync(Tour tour)
+        public async Task<Tour> InsertTourAsync(Tour tour)
         {
             try
             {
@@ -25,6 +25,7 @@ namespace DataAccessLayer
                 await db.SaveChangesAsync();
 
                 log.Info($"Successfully inserted tour: {tour.TourName}");
+                return tour;
             }
             catch (Exception ex)
             {
@@ -63,12 +64,12 @@ namespace DataAccessLayer
                 using var db = _dbFactory.CreateDbContext();
                 var tourToDelete = await db.Tours.FindAsync(tourId);
 
-                if (tourToDelete != null)
-                {
-                    db.Tours.Remove(tourToDelete);
+
+                if (tourToDelete == null)
+                    throw new TourRepoException($"Tour with ID {tourId} not found.");
+            
+                 db.Tours.Remove(tourToDelete);
                     await db.SaveChangesAsync();
-                }
-                
                 log.Info($"Successfully removed tour: {tourId}");
             }
             catch (Exception ex)
