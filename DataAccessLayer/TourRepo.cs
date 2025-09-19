@@ -1,6 +1,7 @@
 ﻿using TourPlanner.Model;
 using log4net;
 using Microsoft.EntityFrameworkCore;
+using DataAccessLayer.Interfaces;
 
 namespace DataAccessLayer
 {
