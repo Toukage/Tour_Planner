@@ -81,7 +81,7 @@ namespace TourPlanner.ViewModel
                     _ => DateTime.SpecifyKind(dt, DateTimeKind.Local).ToUniversalTime()
                 };
 
-                var saved = await _logic.CreateAsync(_tour.TourID, utc, Log.LogComment, Log.LogDifficulty, Log.LogDistance, Log.LogTime, Log.Rating);
+                var saved = await _logic.CreateLogAsync(_tour.TourID, utc, Log.LogComment, Log.LogDifficulty, Log.LogDistance, Log.LogTime, Log.Rating);
 
                 LogSaved?.Invoke(saved);
                 RequestClose?.Invoke();

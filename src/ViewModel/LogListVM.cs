@@ -44,7 +44,7 @@ namespace TourPlanner.ViewModel
             CreateLogCommand = new Relay(_ => { if (HasTour) CreateRequested?.Invoke(); });
             DeleteLogCommand = new Relay(async _ => {
                 if (!HasTour || Selected == null) return;
-                var del = Selected; await _logic.DeleteAsync(del);
+                var del = Selected; await _logic.DeleteLogAsync(del);
                 Logs.Remove(del); Selected = Logs.FirstOrDefault();
             });
             ModifyLogCommand = new Relay(_ => { if (HasTour && Selected != null) ModifyRequested?.Invoke(Selected); });

@@ -85,7 +85,7 @@ namespace TourPlanner.ViewModel
             _original.LogTime = Log.LogTime;
             _original.Rating = Log.Rating;
 
-            await _logic.ModifyAsync(_original);
+            await _logic.ModifyLogAsync(_original);
             LogSaved?.Invoke(_original);
             RequestClose?.Invoke();
         }
