@@ -39,6 +39,7 @@ namespace BusinessLayer
 
                 using var response = await _http.SendAsync(request, ct); //sends request and waits
                 var body = await response.Content.ReadAsStringAsync(ct); //reads response body (ROUTE) and creates a string based on it 
+                log.Info($"[Directions] Raw API response: {body}");
                 response.EnsureSuccessStatusCode();//throws exception when needed
 
                 var (m, s) = TryReadSummary(body);//parsed distance & duration aus dem response
@@ -55,7 +56,11 @@ namespace BusinessLayer
             try
             {
                 using var doc = JsonDocument.Parse(json);//writes the response body into a .js file so we can access the route with the document.
-                var props = doc.RootElement.GetProperty("features")[0];
+                var features = doc.RootElement.GetProperty("features");
+                if (features.GetArrayLength() == 0)
+                    return (0, 0);
+
+                var props = features[0].GetProperty("properties");
 
                 if (props.TryGetProperty("summary", out var sum))
                 {
@@ -63,15 +68,21 @@ namespace BusinessLayer
                             sum.GetProperty("duration").GetDouble());
                 }
 
-                var s0 = props.GetProperty("segments")[0];
-                return (s0.GetProperty("distance").GetDouble(),
-                        s0.GetProperty("duration").GetDouble());
+                if (props.TryGetProperty("segments", out var segments) && segments.GetArrayLength() > 0)
+                {
+                    var s0 = segments[0];
+                    return (s0.GetProperty("distance").GetDouble(),
+                            s0.GetProperty("duration").GetDouble());
+                }
+
+                return (0, 0);
             }
             catch
             {
                 return (0, 0);
             }
         }
+   
     }
 }
 
