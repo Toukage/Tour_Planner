@@ -25,10 +25,10 @@
             <Slider Minimum="1" Maximum="5" TickFrequency="1" IsSnapToTickEnabled="True" Value="{Binding Log.LogDifficulty, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
             <TextBlock Margin="8,10,0,0" Text="Total Distance (km)"/>
-            <TextBox Text="{Binding Log.LogDistance, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBox Text="{Binding LogDistance, UpdateSourceTrigger=PropertyChanged}" />
 
             <TextBlock Margin="8,10,0,0" Text="Total Time (min)"/>
-            <TextBox Text="{Binding Log.LogTime, UpdateSourceTrigger=PropertyChanged}" />
+           <TextBox Text="{Binding LogTime, UpdateSourceTrigger=PropertyChanged}" />
 
             <TextBlock Margin="8,10,0,0" Text="Rating (1-5)"/>
             <Slider Minimum="1" Maximum="5" TickFrequency="1" IsSnapToTickEnabled="True" Value="{Binding Log.Rating, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
