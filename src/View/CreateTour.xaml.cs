@@ -6,11 +6,9 @@ namespace TourPlanner.View
 {
     public partial class CreateTour : Window
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(CreateTour));
         public CreateTour()
         {
             InitializeComponent();
-            log.Info("in CreateTour.cs CreateTour");
             this.DataContextChanged += (_, __) =>
             {
                 if (DataContext is CreateTourVM vm)//schaut ob eh die richte vm das requestclose mitgibt damit das richtige fenster geschlossen wird
@@ -28,6 +26,5 @@ namespace TourPlanner.View
         private void OnVmRequestClose() => this.Close();
     }
 }
-
 
 // gerade etwas schlampig, maybe interface machen damit es nicht hardcoded die VM anschaut? wegen Dependency Inversion Principle?
