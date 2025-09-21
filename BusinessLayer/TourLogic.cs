@@ -91,7 +91,7 @@ namespace BusinessLayer
                 var (km, min) = await _routing.DistAndTimeAsync(tour.TourStart, tour.TourEnd, tour.Transport, ct);
                 tour.Distance = (float)km;
                 tour.EstTime = (float)min;
-
+                await _tourRepo.EditTourAsync(tour);
                 log.Info($"Modified Tour: {tour.TourName}");
             }
             catch (Exception ex)
