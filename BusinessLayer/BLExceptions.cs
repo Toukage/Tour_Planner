@@ -40,4 +40,8 @@ namespace BusinessLayer
     {
         public GeocodeException(string message, Exception? inner = null) : base(message, inner) { }
     }
+    public class ConfigurationException : Exception
+    {
+        public ConfigurationException(string message, Exception? inner = null) : base(message, inner) { }
+    }
 }
