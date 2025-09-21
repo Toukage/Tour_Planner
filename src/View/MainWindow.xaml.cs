@@ -27,11 +27,14 @@ namespace TourPlanner.View
             _viewModel.RequestOpenModifyTour += OnModifyTour;
             _viewModel.LogListVM.CreateRequested += OnCreateLog;
             _viewModel.LogListVM.ModifyRequested += OnModifyLog;
+            _viewModel.ErrorOccurred += ShowErrorMessage;
+            _viewModel.MapVM.ErrorOccurred += ShowErrorMessage;
+            _viewModel.TourListVM.ErrorOccurred += ShowErrorMessage;
+            _viewModel.LogListVM.ErrorOccurred += ShowErrorMessage;
 
             Loaded += MainWindowLoaded; //sobald seite zuende geladen wird soll es die tours laden
 
             Closed += MainWindowClosed;//das ist nur dafuer da das wenn das fenster geschlossen is, das wir alles unsubscriben undso
-            
         }
         private async void MainWindowLoaded(object sender, RoutedEventArgs e)
         {
@@ -47,6 +50,10 @@ namespace TourPlanner.View
             _viewModel.RequestOpenModifyTour -= OnModifyTour;
             _viewModel.LogListVM.CreateRequested -= OnCreateLog;
             _viewModel.LogListVM.ModifyRequested -= OnModifyLog;
+            _viewModel.ErrorOccurred -= ShowErrorMessage;
+            _viewModel.MapVM.ErrorOccurred -= ShowErrorMessage;
+            _viewModel.TourListVM.ErrorOccurred -= ShowErrorMessage;
+            _viewModel.LogListVM.ErrorOccurred -= ShowErrorMessage;
         }
 
         //-------------Tour-------------
@@ -177,7 +184,6 @@ namespace TourPlanner.View
         }
 
         //-------------Unique-Feature-------------
-
        private async void OnReverse(Tour? tour)
        {
             if (tour == null) return;
@@ -191,5 +197,11 @@ namespace TourPlanner.View
                 MessageBox.Show(this, $"Failed to reverse tour:\n{ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
        }
+
+        //-------------Error-Handling-------------
+        private void ShowErrorMessage(string msg)
+        {
+            MessageBox.Show(this, msg, "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
     }
 }
