@@ -38,8 +38,20 @@ namespace TourPlanner.ViewModel
             CreateLogCommand = new Relay(_ => { if (HasTour) CreateRequested?.Invoke(); });
             DeleteLogCommand = new Relay(async _ => {
                 if (!HasTour || Selected == null) return;
-                var del = Selected; await _logic.DeleteLogAsync(del);
-                Logs.Remove(del); Selected = Logs.FirstOrDefault();
+                var del = Selected;
+                try
+                {
+                    await _logic.DeleteLogAsync(del);
+                    Logs.Remove(del);
+                    Selected = Logs.FirstOrDefault();
+                    log.Info("Log deleted.");
+                }
+                catch (Exception ex)
+                {
+                    log.Error("Failed to delete log.", ex);
+                    ErrorOccurred?.Invoke("Failed to delete log.");
+                    throw new VMExceptions.LogListVMException("Failed to delete log.", ex);
+                }
             });
             ModifyLogCommand = new Relay(_ => { if (HasTour && Selected != null) ModifyRequested?.Invoke(Selected); });
         }
@@ -56,7 +68,6 @@ namespace TourPlanner.ViewModel
                 var data = await _logic.GetLogsAsync(tour.TourID, ct);
                 foreach (var l in data) Logs.Add(l);
                 Selected = Logs.FirstOrDefault();
-                ErrorOccurred?.Invoke("Logs loaded.");
             }
             catch (Exception ex)
             {
