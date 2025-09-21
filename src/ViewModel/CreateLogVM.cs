@@ -1,6 +1,7 @@
 ﻿using BusinessLayer;
 using log4net;
 using System.ComponentModel;
+using System.Globalization;
 using System.Windows.Input;
 using TourPlanner.Model;
 
@@ -18,6 +19,7 @@ namespace TourPlanner.ViewModel
         public event PropertyChangedEventHandler? PropertyChanged;
         public event Action? RequestClose;
         public event Action<TourLog>? LogSaved;
+        public event Action<string>? ErrorOccurred;
 
         public ICommand SaveCommand { get; }
         public ICommand CancelCommand { get; }
@@ -43,22 +45,68 @@ namespace TourPlanner.ViewModel
                 }
             }
         }
+        private string _logDistanceInput = "0";
+        public string LogDistanceInput
+        {
+            get => _logDistanceInput;
+            set
+            {
+                _logDistanceInput = value;
+                if (IsValidFloat(value))
+                    _log.LogDistance = float.Parse(value, CultureInfo.InvariantCulture);
+                else
+                    _log.LogDistance = float.NaN;
+
+                OnPropertyChanged(nameof(LogDistanceInput));
+                CommandManager.InvalidateRequerySuggested();
+            }
+        }
+
+        private string _logTimeInput = "0";
+        public string LogTimeInput
+        {
+            get => _logTimeInput;
+            set
+            {
+                _logTimeInput = value;
+                if (IsValidFloat(value))
+                    _log.LogTime = float.Parse(value, CultureInfo.InvariantCulture);
+                else
+                    _log.LogTime = float.NaN;
+
+                OnPropertyChanged(nameof(LogTimeInput));
+                CommandManager.InvalidateRequerySuggested();
+            }
+        }
+
+        // -----------------------------------------------
+
+        private bool CanSave()
+        {
+            if (Log == null) return false;
+            if (Log.LogDifficulty < 1 || Log.LogDifficulty > 5) return false;
+            if (Log.Rating < 1 || Log.Rating > 5) return false;
+            if (!IsValidFloat(LogDistanceInput)) return false;
+            if (!IsValidFloat(LogTimeInput)) return false;
+            return true;
+        }
+        private static bool IsValidFloat(string? input)
+        {
+            if (string.IsNullOrWhiteSpace(input)) return false;
+            if (float.TryParse(input, NumberStyles.Float, CultureInfo.InvariantCulture, out float value))
+            {
+                return value > 0 && !float.IsInfinity(value) && !float.IsNaN(value);
+            }
+            return false;
+        }
+
 
         public void SetTour(Tour tour) 
         {
             _tour = tour ?? throw new ArgumentNullException(nameof(tour));
             CommandManager.InvalidateRequerySuggested();
         }
-        private bool CanSave()
-        {
-            if (_tour == null) return false;
-            if (Log.LogDifficulty < 1 || Log.LogDifficulty > 5) return false;
-            if (Log.Rating < 1 || Log.Rating > 5) return false;
-            if (Log.LogDistance < 0) return false; 
-            if (Log.LogTime < 0) return false;
-            return true;
-        }
-
+       
         private async Task SaveAsync()
         {
             if (_isSaving) return;
@@ -81,14 +129,40 @@ namespace TourPlanner.ViewModel
                     _ => DateTime.SpecifyKind(dt, DateTimeKind.Local).ToUniversalTime()
                 };
 
-                var saved = await _logic.CreateLogAsync(_tour.TourID, utc, Log.LogComment, Log.LogDifficulty, Log.LogDistance, Log.LogTime, Log.Rating);
+                log.Debug($"Log Date set as: {dt} ({dt.Kind}), UTC: {utc}");
+
+                var newLog = new TourLog
+                {
+                    TourID = _tour.TourID,
+                    LogDate = utc,
+                    LogComment = Log.LogComment,
+                    LogDifficulty = Log.LogDifficulty,
+                    LogDistance = Log.LogDistance,
+                    LogTime = Log.LogTime,
+                    Rating = Log.Rating
+                };
+                LogDistanceInput = Log.LogDistance.ToString(CultureInfo.InvariantCulture);
+                LogTimeInput = Log.LogTime.ToString(CultureInfo.InvariantCulture);
+                TourLog saved;
+
+                try
+                {
+                    saved = await _logic.CreateLogAsync(newLog);
+                }
+                catch (Exception ex)
+                {
+                    ErrorOccurred?.Invoke("Failed to save log. " + ex.Message);
+                    throw new VMExceptions.CreateLogVMException("Failed to save log. " + ex.Message, ex);
+                }
 
                 LogSaved?.Invoke(saved);
                 RequestClose?.Invoke();
             }
             catch (Exception ex)
             {
-                log.Error("CreateLog failed", ex);
+                log.Error("Failed to create Log", ex);
+                ErrorOccurred?.Invoke("An unexpected error occurred while saving the log.");
+                throw new VMExceptions.CreateLogVMException("An unexpected error occurred while saving the log.", ex);
             }
             finally
             {

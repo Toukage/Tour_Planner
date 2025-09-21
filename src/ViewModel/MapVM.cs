@@ -12,7 +12,8 @@ namespace TourPlanner.ViewModel
         private readonly TourLogic _logic;
         private CancellationTokenSource? _cts;
         public event PropertyChangedEventHandler? PropertyChanged;
-        
+        public event Action<string>? ErrorOccurred;
+
         public string CurrentRouteGeoJson { get; set; } = "";
 
         private Tour? _selectedTour;
@@ -23,7 +24,7 @@ namespace TourPlanner.ViewModel
             {
                 if (_selectedTour == value) return;
                 _selectedTour = value;
-                log.Info($"[MapVM] Selected Tour:  {value?.TourID} - {value?.TourName}");
+                log.Info($"Selected Tour:  {value?.TourID} - {value?.TourName}");
                 LoadRoute();
             }
         }
@@ -42,7 +43,7 @@ namespace TourPlanner.ViewModel
         private async void LoadRoute()
         {
             _cts?.Cancel(); 
-            log.Info("[MapVM] Loading Route.");
+            log.Info("Loading Route.");
             if (_selectedTour == null)
             {
                 SetRoute("");
@@ -57,15 +58,12 @@ namespace TourPlanner.ViewModel
                 if (_cts.Token.IsCancellationRequested) return;
                 SetRoute(geoJson);
             }
-            catch (OperationCanceledException)
-            {
-                log.Info("[MapVM] Render cancelled.");
-                SetRoute("");
-            }
             catch (Exception ex)
             {
-                log.Error("[MapVM]  Failed to get route.", ex);
+                log.Error("Failed to load route for the selected tour.", ex);
                 SetRoute("");
+                ErrorOccurred?.Invoke("Failed to load map route.");
+                throw new VMExceptions.MapVMException("Failed to load map route.", ex);
             }
         }
 

@@ -1,13 +1,7 @@
 ﻿using BusinessLayer;
 using log4net;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using TourPlanner.Model;
 
@@ -30,7 +24,7 @@ namespace TourPlanner.ViewModel
         public bool HasTour => _currentTour != null;
         public event Action? CreateRequested;
         public event Action<TourLog?>? ModifyRequested;
-
+        public event Action<string>? ErrorOccurred;
         public ICommand CreateLogCommand { get; }
         public ICommand DeleteLogCommand { get; }
         public ICommand ModifyLogCommand { get; }
@@ -57,10 +51,19 @@ namespace TourPlanner.ViewModel
             Logs.Clear();
             Selected = null;
             if (tour == null) return;
-
-            var data = await _logic.GetLogsAsync(tour.TourID, ct);
-            foreach (var l in data) Logs.Add(l);
-            Selected = Logs.FirstOrDefault();
+            try
+            {
+                var data = await _logic.GetLogsAsync(tour.TourID, ct);
+                foreach (var l in data) Logs.Add(l);
+                Selected = Logs.FirstOrDefault();
+                ErrorOccurred?.Invoke("Logs loaded.");
+            }
+            catch (Exception ex)
+            {
+                log.Error("Failed to load logs.", ex);
+                ErrorOccurred?.Invoke("Failed to load logs.");
+                throw new VMExceptions.LogListVMException("Failed to load logs.", ex);
+            }
         }
 
         public void RefreshItem(TourLog updated)//re-laedt selection wenn die log zb modified wurde und die neue version angezeigt werden soll.

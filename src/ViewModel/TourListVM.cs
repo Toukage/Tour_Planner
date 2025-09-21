@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
 using BusinessLayer;
 using TourPlanner.Model;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using log4net;
-using System.Diagnostics;
 
 namespace TourPlanner.ViewModel
 {
@@ -27,7 +21,7 @@ namespace TourPlanner.ViewModel
         public event Action<Tour?>? ReportRequested;
         public event Action<Tour?>? ModifyRequested;
         public event Action<Tour?>? ReverseRequested;
-
+        public event Action<string>? ErrorOccurred;
         //Tour buttons
         public ICommand OpenCreateTourCommand { get; }
         public ICommand ReportTourCommand { get; }
@@ -50,7 +44,7 @@ namespace TourPlanner.ViewModel
 
                 if (!_muteEvents) SelectionChanged?.Invoke(_selectedItem);
 
-                log.Info($"[ListVM] SelectedItem => {_selectedItem?.TourID}:{_selectedItem?.TourName}");
+                log.Info($"SelectedItem => {_selectedItem?.TourID}:{_selectedItem?.TourName}");
             }
         }
 
@@ -64,10 +58,18 @@ namespace TourPlanner.ViewModel
             {
                 if (SelectedItem == null) return;
                 var toDelete = SelectedItem;
-                await _logic.DeleteTourAsync(toDelete);
-
-                Tours.Remove(toDelete);
-                SelectedItem = Tours.OrderByDescending(t => t.TourID).FirstOrDefault();
+                try
+                {
+                    await _logic.DeleteTourAsync(toDelete);
+                    Tours.Remove(toDelete);
+                    SelectedItem = Tours.OrderByDescending(t => t.TourID).FirstOrDefault();
+                }
+                catch (Exception ex)
+                {
+                    log.Error("Failed to delete tour.", ex);
+                    ErrorOccurred?.Invoke("Failed to delete tour.");
+                    throw new VMExceptions.TourListVMException("Failed to delete tour.", ex);
+                }
             }, _ => SelectedItem != null);
 
             ModifyTourCommand = new Relay(_ =>
@@ -79,21 +81,31 @@ namespace TourPlanner.ViewModel
 
         public async Task LoadAsync()//laedt alle tours fuer die List-View
         {
-            var list = await _logic.GetAllToursAsync();
-            _muteEvents = true;
             try
             {
-                Tours.Clear();
-                foreach (var t in list) Tours.Add(t);
 
-                SelectedItem = Tours.OrderByDescending(t => t.TourID).FirstOrDefault();
+                var list = await _logic.GetAllToursAsync();
+                _muteEvents = true;
+                try
+                {
+                    Tours.Clear();
+                    foreach (var t in list) Tours.Add(t);
+
+                    SelectedItem = Tours.OrderByDescending(t => t.TourID).FirstOrDefault();
+                }
+                finally
+                {
+                    _muteEvents = false;
+                }
+
+                SelectionChanged?.Invoke(SelectedItem);
             }
-            finally
+            catch (Exception ex)
             {
-                _muteEvents = false;
+                log.Error("Failed to load tours.", ex);
+                ErrorOccurred?.Invoke("Failed to load tours.");
+                throw new VMExceptions.TourListVMException("Failed to load tours.", ex);
             }
-
-            SelectionChanged?.Invoke(SelectedItem);
         }
 
         public void RefreshItem(Tour updated)//re-laedt selection wenn die tour zb modified wurde und die neue version angezeigt werden soll.

@@ -20,7 +20,7 @@ namespace TourPlanner.ViewModel
         public event Action<TourLog>? RequestOpenModifyLog;
         public event Action<Tour?>? ReportRequested;
         public event Action<Tour?>? ReverseRequested;
-
+        public event Action<string>? ErrorOccurred;
         public MainVM(TourLogic logic, TourListVM listVm, TourDetailsVM detailsVm, MapVM mapVm, LogListVM logListVm)
         {
             _logic = logic;
@@ -65,7 +65,9 @@ namespace TourPlanner.ViewModel
             }
             catch (Exception ex)
             {
-                log.Error("[MainViewModel] failed to load tours", ex);
+                log.Error("failed to load tours", ex);
+                ErrorOccurred?.Invoke("Failed to load tours");
+                throw new VMExceptions.MainVMException("Failed to load tours.", ex);
             }
         }
 
@@ -90,31 +92,50 @@ namespace TourPlanner.ViewModel
 
         public async Task<string> CreateReportAsync(Tour tour, byte[]? mapPng, string path) //Report flow
         {
-            await _logic.CreateReportAsync(tour, mapPng, path);
-            return path;
+            try
+            {
+                await _logic.CreateReportAsync(tour, mapPng, path);
+                return path;
+            }
+            catch (Exception ex)
+            {
+                log.Error("Fehler beim erstellen des Reports.", ex);
+                ErrorOccurred?.Invoke("The report could not be generated. Please check your inputs and try again.");
+                throw new VMExceptions.MainVMException("Failed to create report.", ex);
+            }
         }
 
         public async Task<Tour> ReverseTourAsync(Tour original)
         {
-            if (original == null) throw new ArgumentNullException(nameof(original));
-
-            var reversed = new Tour
+            if (original == null) 
             {
-                TourName = "Reversed " + original.TourName,
-                TourDescription = $"This is a reversed tour of the {original.TourName} Tour.",
-                TourStart = original.TourEnd,
-                TourEnd = original.TourStart,
-                Transport = original.Transport,
-            };
+                log.Warn("Original Tour ist Null.");
+                ErrorOccurred?.Invoke("Original tour is not defined.");
+                throw new VMExceptions.MainVMException("Original tour is not defined.", new ArgumentNullException(nameof(original)));
+            }
 
-            await _logic.CreateTourAsync(reversed);
-            OnTourCreated(reversed);
+            try
+            {
+                var reversed = new Tour
+                {
+                    TourName = "Reversed " +original.TourName,
+                    TourDescription = $"This is a reversed tour of the {original.TourName} Tour.",
+                    TourStart = original.TourEnd,
+                    TourEnd = original.TourStart,
+                    Transport = original.Transport,
+                };
 
-            return reversed;
-        }
-        private void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+                await _logic.CreateTourAsync(reversed);
+                OnTourCreated(reversed);
+
+                return reversed;
+            }
+            catch (Exception ex)
+            {
+                log.Error("Fehler beim Reverse der Tour.", ex);
+                ErrorOccurred?.Invoke("Failed to reverse tour.");
+                throw new VMExceptions.MainVMException("Failed to reverse tour.", ex);
+            }
         }
     }
 }

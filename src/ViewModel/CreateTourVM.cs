@@ -17,7 +17,8 @@ namespace TourPlanner.ViewModel
        
         public event PropertyChangedEventHandler? PropertyChanged;
         public event Action? RequestClose;
-        public event Action<Tour>? TourSaved; 
+        public event Action<Tour>? TourSaved;
+        public event Action<string>? ErrorOccurred;
 
         public ICommand CreateTourCommand { get; } 
         
@@ -43,23 +44,37 @@ namespace TourPlanner.ViewModel
 
         private bool CanCreateTour() //schaut nach das eh alle felder ausgefullt sind. kann man noch ausarbeiten damit es weniger user bedinge errors geben kann
         {
-            return !string.IsNullOrWhiteSpace(Tour?.TourName) &&
+            return IsValidAddress(Tour?.TourStart) &&
+            IsValidAddress(Tour?.TourEnd) && 
+            !string.IsNullOrWhiteSpace(Tour?.TourName) &&
             !string.IsNullOrWhiteSpace(Tour?.TourStart) &&
             !string.IsNullOrWhiteSpace(Tour?.TourEnd) &&
             !string.IsNullOrWhiteSpace(Tour?.TourDescription) &&
             !string.IsNullOrWhiteSpace(Tour?.Transport);
         }
 
+        private bool IsValidAddress(string? input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+                return false;
+            //Mindestens ein Buchstabe (A-Z, a-z) muss drin sein
+            return input.Any(char.IsLetter);
+        }
         private async Task CreateTourAsync()
         {
             if (_isCreating) return; //stoppt wenn schon eine tour created wird      
             _isCreating = true; //sagt das eine tour gerade created wird
             CommandManager.InvalidateRequerySuggested(); //disabled button sobald eine tour creation gestartet wird
-
+            
             try
             {
                 log.Info($"Creating Tour: {Tour.TourName} / {Tour.TourDescription} / {Tour.TourStart} / {Tour.TourEnd} / {Tour.Transport}");
-                
+
+                if (!CanCreateTour())
+                {
+                    ErrorOccurred?.Invoke("Please fill in all fields to create a tour.");
+                    return;
+                }
                 await _tourLogic.CreateTourAsync(Tour); //ruft die logik im BL auf welches die tour speichert
 
                 TourSaved?.Invoke(Tour); //sagt dem Shell aka dem MainWindow das es eine neue tour gibt damit diese displayed wird.
@@ -68,7 +83,9 @@ namespace TourPlanner.ViewModel
             }
             catch (Exception ex)
             {
-                log.Error("Create failed", ex);
+                log.Error("Toue Creation failed", ex);
+                ErrorOccurred?.Invoke("The tour could not be created. Please try again.");
+                throw new VMExceptions.CreateTourVMException("Failed to create tour.", ex);
             }
             finally
             {
