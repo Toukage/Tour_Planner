@@ -92,6 +92,8 @@ namespace TourPlanner.View
 
             services.AddSingleton(sp => new GeoCode(sp.GetRequiredService<HttpClient>(), orsApiKey));
             services.AddSingleton(sp => new Directions(sp.GetRequiredService<HttpClient>(), orsApiKey));
+            services.AddSingleton<BusinessLayer.Interfaces.IGeoCode>(sp => new GeoCode(sp.GetRequiredService<HttpClient>(), orsApiKey));
+            services.AddSingleton<BusinessLayer.Interfaces.IDirections>(sp => new Directions(sp.GetRequiredService<HttpClient>(), orsApiKey));
 
             //DAL
             var connString = config.GetConnectionString("Default");
@@ -105,12 +107,18 @@ namespace TourPlanner.View
             services.AddSingleton(new HttpClient { Timeout = TimeSpan.FromSeconds(20) });
             services.AddSingleton<DataAccessLayer.TourRepo>();
             services.AddSingleton<DataAccessLayer.LogRepo>();
+            services.AddSingleton<DataAccessLayer.Interfaces.ITourRepo, DataAccessLayer.TourRepo>();
+            services.AddSingleton<DataAccessLayer.Interfaces.ILogRepo, DataAccessLayer.LogRepo>();
 
             //BL
             services.AddSingleton<Routing>();
             services.AddSingleton<TourLogic>();
             services.AddSingleton<LogLogic>();
             services.AddSingleton<Report>();
+            services.AddSingleton<BusinessLayer.Interfaces.ITourLogic, TourLogic>();
+            services.AddSingleton<BusinessLayer.Interfaces.ILogLogic, LogLogic>();
+            services.AddSingleton<BusinessLayer.Interfaces.IRouting, Routing>();
+            services.AddSingleton<BusinessLayer.Interfaces.IReport, Report>();
 
             //View Models
             services.AddSingleton<TourPlanner.ViewModel.TourListVM>();
