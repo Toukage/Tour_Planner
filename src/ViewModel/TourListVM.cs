@@ -26,12 +26,14 @@ namespace TourPlanner.ViewModel
         public event Action<Tour?>? SelectionChanged;
         public event Action<Tour?>? ReportRequested;
         public event Action<Tour?>? ModifyRequested;
+        public event Action<Tour?>? ReverseRequested;
 
         //Tour buttons
         public ICommand OpenCreateTourCommand { get; }
         public ICommand ReportTourCommand { get; }
         public ICommand DeleteTourCommand { get; }
         public ICommand ModifyTourCommand { get; }
+        public ICommand ReverseTourCommand { get; }
 
         public ObservableCollection<Tour> Tours { get; } = new();
 
@@ -57,6 +59,7 @@ namespace TourPlanner.ViewModel
             _logic = logic;
             OpenCreateTourCommand = new Relay(_ => CreateRequested?.Invoke());
             ReportTourCommand = new Relay(_ => ReportRequested?.Invoke(SelectedItem),_ => SelectedItem != null);
+            ReverseTourCommand = new Relay(_ => ReverseRequested?.Invoke(SelectedItem), _ => SelectedItem != null);
             DeleteTourCommand = new Relay(async _ =>
             {
                 if (SelectedItem == null) return;

@@ -36,6 +36,7 @@
                 <local:DeleteBtn Margin="0,0,0,0" IsButtonEnabled="{Binding SelectedItem, Converter={StaticResource NullToBool}}" Command="{Binding DeleteTourCommand}"/>
                 <local:ModifyBtn Margin="0,0,0,0" IsButtonEnabled="{Binding SelectedItem, Converter={StaticResource NullToBool}}" Command="{Binding ModifyTourCommand}"/>
                 <Button Content="📄" Padding="8,2" IsEnabled="{Binding SelectedItem, Converter={StaticResource NullToBool}}" Command="{Binding ReportTourCommand}"/>
+                <Button Content="⟲" FontSize="20" Padding="8,2" IsEnabled="{Binding SelectedItem, Converter={StaticResource NullToBool}}" Command="{Binding ReverseTourCommand}"/>
             </StackPanel>
         </DockPanel>
 

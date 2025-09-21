@@ -22,7 +22,8 @@ namespace TourPlanner.View
 
             // verbindet events an actions by: action -> VM -> event triggert -> MainVM -> Shell -> action
             _viewModel.RequestOpenCreateTour += OpenCreateTour;
-            _viewModel.ReportRequested += OnReport; 
+            _viewModel.ReportRequested += OnReport;
+            _viewModel.ReverseRequested += OnReverse;
             _viewModel.RequestOpenModifyTour += OnModifyTour;
             _viewModel.LogListVM.CreateRequested += OnCreateLog;
             _viewModel.LogListVM.ModifyRequested += OnModifyLog;
@@ -42,6 +43,7 @@ namespace TourPlanner.View
             //hier wird abgemeldet, des verhindert Memory-Leaks
             _viewModel.RequestOpenCreateTour -= OpenCreateTour;
             _viewModel.ReportRequested -= OnReport;
+            _viewModel.ReverseRequested -= OnReverse;
             _viewModel.RequestOpenModifyTour -= OnModifyTour;
             _viewModel.LogListVM.CreateRequested -= OnCreateLog;
             _viewModel.LogListVM.ModifyRequested -= OnModifyLog;
@@ -173,5 +175,21 @@ namespace TourPlanner.View
                 MessageBox.Show(this, $"Failed to generate report:\n{ex.Message}", "Error",MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
+        //-------------Unique-Feature-------------
+
+       private async void OnReverse(Tour? tour)
+       {
+            if (tour == null) return;
+            try
+            {
+                var reversed = await _viewModel.ReverseTourAsync(tour);
+               
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, $"Failed to reverse tour:\n{ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+       }
     }
 }

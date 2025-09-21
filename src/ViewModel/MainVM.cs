@@ -19,6 +19,7 @@ namespace TourPlanner.ViewModel
         public event Action<Tour>? RequestOpenModifyTour;
         public event Action<TourLog>? RequestOpenModifyLog;
         public event Action<Tour?>? ReportRequested;
+        public event Action<Tour?>? ReverseRequested;
 
         public MainVM(TourLogic logic, TourListVM listVm, TourDetailsVM detailsVm, MapVM mapVm, LogListVM logListVm)
         {
@@ -48,6 +49,7 @@ namespace TourPlanner.ViewModel
             };
 
             TourListVM.ReportRequested += t => ReportRequested?.Invoke(t); //startet Report flow
+            TourListVM.ReverseRequested += t => ReverseRequested?.Invoke(t); //startet Reverse flow
         }
         public void OnTourCreated(Tour tour)
         {
@@ -92,6 +94,24 @@ namespace TourPlanner.ViewModel
             return path;
         }
 
+        public async Task<Tour> ReverseTourAsync(Tour original)
+        {
+            if (original == null) throw new ArgumentNullException(nameof(original));
+
+            var reversed = new Tour
+            {
+                TourName = "Reversed " + original.TourName,
+                TourDescription = $"This is a reversed tour of the {original.TourName} Tour.",
+                TourStart = original.TourEnd,
+                TourEnd = original.TourStart,
+                Transport = original.Transport,
+            };
+
+            await _logic.CreateTourAsync(reversed);
+            OnTourCreated(reversed);
+
+            return reversed;
+        }
         private void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
