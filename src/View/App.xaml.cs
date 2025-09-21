@@ -4,6 +4,7 @@ using log4net.Config;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.Configuration;
 using System.IO;
 using System.Net.Http;
 using System.Reflection;
@@ -87,7 +88,7 @@ namespace TourPlanner.View
             if (string.IsNullOrWhiteSpace(orsApiKey))
             {
                 MessageBox.Show("Kein OpenRouteService API Key gefunden!", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
-                throw new InvalidOperationException("OpenRouteService API key fehlt!");
+                throw new BusinessLayer.ConfigurationException("OpenRouteService API key fehlt!");
             }
 
             services.AddSingleton(sp => new GeoCode(sp.GetRequiredService<HttpClient>(), orsApiKey));
@@ -130,6 +131,7 @@ namespace TourPlanner.View
             services.AddTransient<TourPlanner.ViewModel.CreateLogVM>();
             services.AddTransient <TourPlanner.ViewModel.ModifyTourVM>();
             services.AddTransient<TourPlanner.ViewModel.ModifyLogVM>();
+
             //Views
             services.AddTransient<TourPlanner.View.MainWindow>();
             services.AddTransient<TourPlanner.View.CreateTour>(); 
