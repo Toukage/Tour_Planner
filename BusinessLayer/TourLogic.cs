@@ -25,20 +25,15 @@ namespace BusinessLayer
         {
             try
             {
-
-                log.Info($"[CreateTourAsync] start='{tour.TourStart}' end='{tour.TourEnd}' transport='{tour.Transport}'");
-
                 var (km, min) = await _routing.DistAndTimeAsync(tour.TourStart, tour.TourEnd, tour.Transport, ct);
                 tour.Distance = (float)km;//populates tour
                 tour.EstTime = (float)min;
-
-                log.Info($"[CreateTourAsync] computed distance={tour.Distance}km estTime={tour.EstTime}min");
                 await _tourRepo.InsertTourAsync(tour); // saves tour to DB
-                log.Info($"[CreateTourAsync] saved Tour '{tour.TourName}'");
+                log.Info($"Created Tour: {tour.TourName}");
             }
             catch (Exception ex)
             {
-                log.Error("[CreateTourAsync] failed", ex);
+                log.Error($"Failed to Create Tour: {tour.TourName}", ex);
                 throw new TourLogicException("Failed to create tour.", ex);
             }
         }
@@ -47,29 +42,31 @@ namespace BusinessLayer
         {
             try
             {
-                return _routing.RouteAsync(tour.TourStart, tour.TourEnd, tour.Transport, ct);
+                var route = _routing.RouteAsync(tour.TourStart, tour.TourEnd, tour.Transport, ct);
+                log.Info($"Got Route for Tour: {tour.TourName}");
+                return route;
             }
             catch (Exception ex)
             {
-                log.Error("[GetRouteAsync] failed", ex);
+                log.Error($"Failed to get Route for Tour: {tour.TourName}", ex);
                 throw new TourLogicException("Failed to get route for tour.", ex);
             }
-           
         }
 
         public async Task<List<Tour>> GetAllToursAsync()
         {
             try
             {
-                return await _tourRepo.GetAllToursAsync();
+                var tours = await _tourRepo.GetAllToursAsync();
+                log.Info("Got all Tours");
+                return tours;
             }
             catch (Exception ex)
             {
-                log.Error("[GetAllToursAsync] failed", ex);
+                log.Error("Failed to get all Tours", ex);
                 throw new TourLogicException("Failed to get all tours.", ex);
             }
         }
-
 
         public async Task DeleteTourAsync(Tour tour)
         {
@@ -77,10 +74,11 @@ namespace BusinessLayer
             try
             {
                 await _tourRepo.DropTourAsync(tour.TourID);
+                log.Info($"Deleted Tour: {tour.TourName}");
             }
             catch (Exception ex)
             {
-                log.Error("[DeleteTourAsync] failed", ex);
+                log.Error($"Failed to delete tour: {tour.TourName}", ex);
                 throw new TourLogicException("Failed to delete tour.", ex);
             }
         }
@@ -94,15 +92,14 @@ namespace BusinessLayer
                 tour.Distance = (float)km;
                 tour.EstTime = (float)min;
 
-                await _tourRepo.EditTourAsync(tour);
+                log.Info($"Modified Tour: {tour.TourName}");
             }
             catch (Exception ex)
             {
-                log.Error("[ModifyTourAsync] failed", ex);
+                log.Error($"Failed to modify Tour : {tour.TourName}", ex);
                 throw new TourLogicException("Failed to modify tour.", ex);
             }
         }
-
 
         public async Task<string> CreateReportAsync(Tour tour, byte[]? mapPng, string? reportPath = null, CancellationToken ct = default)
         {
@@ -117,10 +114,12 @@ namespace BusinessLayer
             {
                 var logs = await _logLogic.GetLogsAsync(tour.TourID, ct);
                 await _report.ReportAsync(tour, logs, mapPng, path, ct);
+                log.Info($"Successfully generated report for {tour.TourName} at {path}");
                 return path;
             }
             catch (Exception ex)
             {
+                log.Error($"Failed to generate report for {tour.TourName}  at {path}", ex);
                 throw new TourLogicException("Failed to generate report for tour.", ex);
             }
         }

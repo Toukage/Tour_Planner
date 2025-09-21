@@ -42,28 +42,34 @@ namespace BusinessLayer
         //cancelletion token ins protocoll schreiben! dafuer da das man HTTP calls noch abbrechen kann !
         public async Task<(double km, double minutes)> DistAndTimeAsync(string startPlace, string endPlace, string transport, CancellationToken ct = default)
         {
+            log.Debug($"Distance/Time requested: start={startPlace}, end={endPlace}, transport={transport}");
             try
             {
                 var (key, profile) = BuildKey(startPlace, endPlace, transport);
                 var result = await _cache.GetOrAdd(key, _ => ComputeCoreAsync(startPlace, endPlace, profile, ct));
+                log.Info($"Distance and time computed: {result.Km:F2} km, {result.Minutes:F1} min, transport={profile}");
                 return (result.Km, result.Minutes);
             }
             catch (Exception ex)
             {
+                log.Error($"Failed to compute distance and time: start={startPlace}, end={endPlace}, transport={transport}", ex);
                 throw new RoutingException("Failed to compute distance and time for route.", ex);
             }
         }
 
         public async Task<string> RouteAsync(string startPlace, string endPlace, string transport, CancellationToken ct = default)
         {
+            log.Debug($"Route requested: start={startPlace}, end={endPlace}, transport={transport}");
             try
             {
                 var (key, profile) = BuildKey(startPlace, endPlace, transport);
                 var result = await _cache.GetOrAdd(key, _ => ComputeCoreAsync(startPlace, endPlace, profile, ct));
+                log.Info($"Route computed for transport={profile}. Length: {result.Km:F2} km, Duration: {result.Minutes:F1} min");
                 return result.Route;
             }
             catch (Exception ex)
             {
+                log.Error($"Failed to compute route: start={startPlace}, end={endPlace}, transport={transport}", ex);
                 throw new RoutingException("Failed to compute route.", ex);
             }
         }
@@ -74,9 +80,12 @@ namespace BusinessLayer
             try
             {
                 var start = await _geo.GeocodeAsync(startPlace, focus: null, ct);
+                log.Debug($"Geocoded start: {startPlace} -> {start.lon},{start.lat}");
                 var end = await _geo.GeocodeAsync(endPlace, focus: start, ct);
+                log.Debug($"Geocoded end: {endPlace} -> {end.lon},{end.lat}");
 
                 var (geo, meters, seconds) = await _dir.GetRouteAsync(start, end, profile, ct);
+                log.Info($"Route received. Meters: {meters}, Seconds: {seconds}");
 
                 return new RouteResult
                 {
@@ -87,6 +96,7 @@ namespace BusinessLayer
             }
             catch (Exception ex)
             {
+                log.Error($"Failed to compute core route result: start={startPlace}, end={endPlace}, profile={profile}", ex);
                 throw new RoutingException("Failed to compute core route result.", ex);
             }
         }

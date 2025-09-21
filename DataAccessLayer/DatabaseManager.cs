@@ -1,6 +1,5 @@
 ﻿using DataAccessLayer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using TourPlanner.Model;
 
 namespace DataAccessLayer

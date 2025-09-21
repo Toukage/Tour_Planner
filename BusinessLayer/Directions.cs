@@ -20,6 +20,7 @@ namespace BusinessLayer
 
         public async Task<(string geoJson, double meters, double seconds)> GetRouteAsync((double lon, double lat) start, (double lon, double lat) end, string profile, CancellationToken ct = default)
         {
+            log.Debug($"Requesting route: Start({start.lon},{start.lat}), End({end.lon},{end.lat}), Profile: {profile}");
             try
             {
                 var url = $"https://api.openrouteservice.org/v2/directions/{profile}/geojson";
@@ -39,14 +40,15 @@ namespace BusinessLayer
 
                 using var response = await _http.SendAsync(request, ct); //sends request and waits
                 var body = await response.Content.ReadAsStringAsync(ct); //reads response body (ROUTE) and creates a string based on it 
-                log.Info($"[Directions] Raw API response: {body}");
                 response.EnsureSuccessStatusCode();//throws exception when needed
 
                 var (m, s) = TryReadSummary(body);//parsed distance & duration aus dem response
+                log.Info($"Route received: meters={m}, seconds={s}");
                 return (body, m, s);
             }
             catch (Exception ex) 
             {
+                log.Error($" Failed to get route for Start({start.lon},{start.lat}) End({end.lon},{end.lat}) Profile: {profile}", ex);
                 throw new DirectionsException("Failed to get route from OpenRouteService.", ex);
             }
         }
@@ -77,8 +79,9 @@ namespace BusinessLayer
 
                 return (0, 0);
             }
-            catch
+            catch (Exception ex)
             {
+                log.Error($" Could not parse summary from response: {ex.Message}");
                 return (0, 0);
             }
         }

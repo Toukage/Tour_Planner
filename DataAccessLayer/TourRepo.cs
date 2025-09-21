@@ -20,12 +20,10 @@ namespace DataAccessLayer
         {
             try
             {
-                log.Info($"Attempting to insert tour: {tour.TourName}, {tour.TourStart}, {tour.TourEnd}");
                 using var db = _dbFactory.CreateDbContext();
                 await db.Tours.AddAsync(tour);
                 await db.SaveChangesAsync();
-
-                log.Info($"Successfully inserted tour: {tour.TourName}");
+                log.Info($"Successfully inserted tour with the Name: {tour.TourName} tour was given the ID : {tour.TourID}");
                 return tour;
             }
             catch (Exception ex)
@@ -39,13 +37,9 @@ namespace DataAccessLayer
         {
             try
             {
-                log.Info($"Attempting to modify tour: {tour.TourName}, {tour.TourStart}, {tour.TourEnd}");
-
                 using var db = _dbFactory.CreateDbContext();
                 db.Tours.Update(tour);
                 await db.SaveChangesAsync();
-                
-
                 log.Info($"Successfully modified tour: {tour.TourName}");
             }
             catch (Exception ex)
@@ -60,17 +54,11 @@ namespace DataAccessLayer
         {
             try
             {
-                log.Info($"Attempting to drop tour: {tourId}");
-
                 using var db = _dbFactory.CreateDbContext();
                 var tourToDelete = await db.Tours.FindAsync(tourId);
-
-
-                if (tourToDelete == null)
-                    throw new TourRepoException($"Tour with ID {tourId} not found.");
-            
-                 db.Tours.Remove(tourToDelete);
-                    await db.SaveChangesAsync();
+                if (tourToDelete == null) throw new TourRepoException($"Tour with ID {tourId} not found.");
+                db.Tours.Remove(tourToDelete);
+                await db.SaveChangesAsync();
                 log.Info($"Successfully removed tour: {tourId}");
             }
             catch (Exception ex)
@@ -83,11 +71,19 @@ namespace DataAccessLayer
         //--------------------------------GET--DATA--------------------------------
         public async Task<List<Tour>> GetAllToursAsync()
         {
-            using var db = _dbFactory.CreateDbContext();
-            var query = db.Tours.OrderBy(t => t.TourID);
-            var tours = await query.ToListAsync();
-
-            return tours;
+            try
+            {
+                using var db = _dbFactory.CreateDbContext();
+                var query = db.Tours.OrderBy(t => t.TourID);
+                var tours = await query.ToListAsync();
+                log.Info($"Successfully loaded {tours.Count} tours from the database.");
+                return tours;
+            }
+            catch (Exception ex)
+            {
+                log.Error("GetAllTours failed", ex);
+                throw new TourRepoException("Failed to load tours from database.", ex);
+            }
         }
     }
 }

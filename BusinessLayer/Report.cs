@@ -1,12 +1,12 @@
-﻿using TourPlanner.Model;
+﻿using BusinessLayer.Interfaces;
+using iText.IO.Image;
 using iText.Kernel.Pdf;
 using iText.Layout;
+using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Properties;
-using iText.IO.Image;
-using iText.Layout.Borders;
 using System.Globalization;
-using BusinessLayer.Interfaces;
+using TourPlanner.Model;
 
 namespace BusinessLayer
 {
@@ -31,7 +31,7 @@ namespace BusinessLayer
                     doc.Add(new Paragraph(tour.TourName).SetTextAlignment(TextAlignment.CENTER).SetFontSize(14));//zeigt den namen der tour an
                     doc.Add(new Paragraph("\n"));
 
-                    // Tour details (small table)
+                    //Tour details
                     doc.Add(new Paragraph("Details:").SetFontSize(14));
                     var details = new Table(new float[] { 120, 350 }).UseAllAvailableWidth();
                     void Row(string k, string v)
