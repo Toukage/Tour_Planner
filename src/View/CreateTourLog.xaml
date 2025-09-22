@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Create Tour Log" Height="420" Width="420"
         WindowStartupLocation="CenterOwner" ResizeMode="NoResize">
+    
     <Grid Margin="15">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -29,8 +30,8 @@
             <Slider Minimum="1" Maximum="5" TickFrequency="1" IsSnapToTickEnabled="True" Value="{Binding Log.Rating, Mode=TwoWay}" />
         </StackPanel>
 
-        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
-            <Button Content="Save"   Width="90" Margin="0,0,8,0" Command="{Binding SaveCommand}"/>
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,0">
+            <Button Content="Save"   Width="90" Margin="0,0,20,0" Command="{Binding SaveCommand}"/>
             <Button Content="Cancel" Width="90" Command="{Binding CancelCommand}"/>
         </StackPanel>
     </Grid>

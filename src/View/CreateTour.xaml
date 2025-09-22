@@ -22,6 +22,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
             <TextBlock Grid.Row="0" Grid.Column="0" Text="Tour Name:" Margin="5"/>
@@ -45,7 +46,9 @@
                 <ComboBoxItem Content="Public Transport"/>
             </ComboBox>
 
-            <Button Grid.Row="10" Grid.Column="1" Content="Create Tour" Width="120" Margin="10" Command="{Binding CreateTourCommand}"/>
+            <StackPanel Grid.Row="10" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,0">
+                <Button Grid.Row="11" Grid.Column="1" Content="Create Tour" Width="120" Margin="10" Command="{Binding CreateTourCommand}"/>
+            </StackPanel>
         </Grid>
     </ScrollViewer>
 </Window>

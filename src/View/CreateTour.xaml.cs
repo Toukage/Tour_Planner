@@ -1,6 +1,5 @@
 ﻿using System.Windows;
 using TourPlanner.ViewModel;
-using log4net;
 
 namespace TourPlanner.View
 {

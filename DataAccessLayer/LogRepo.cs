@@ -3,7 +3,6 @@ using log4net;
 using Microsoft.EntityFrameworkCore;
 using DataAccessLayer.Interfaces;
 
-
 namespace DataAccessLayer
 {
     public class LogRepo : ILogRepo

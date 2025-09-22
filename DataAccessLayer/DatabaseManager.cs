@@ -1,5 +1,4 @@
-﻿using DataAccessLayer;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using TourPlanner.Model;
 
 namespace DataAccessLayer

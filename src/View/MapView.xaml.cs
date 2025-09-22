@@ -1,14 +1,8 @@
-﻿using System;
-using System.Diagnostics;
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using log4net;
 using Microsoft.Web.WebView2.Core;
-using System.Runtime.Versioning;
-using BusinessLayer;
 
 namespace TourPlanner.View
 {

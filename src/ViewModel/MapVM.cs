@@ -58,12 +58,16 @@ namespace TourPlanner.ViewModel
                 if (_cts.Token.IsCancellationRequested) return;
                 SetRoute(geoJson);
             }
-            catch (Exception ex)
+            catch (OperationCanceledException)
             {
-                log.Error("Failed to load route for the selected tour.", ex);
+                log.Warn("Route rendering was cancelled by user.");
                 SetRoute("");
-                ErrorOccurred?.Invoke("Failed to load map route.");
-                throw new VMExceptions.MapVMException("Failed to load map route.", ex);
+                //Kein ErrorOccurred, da kein eigentlicher Fehler!
+            }
+            catch 
+            {
+                log.Error("Failed to load route for the selected tour.");
+                SetRoute("");
             }
         }
 
